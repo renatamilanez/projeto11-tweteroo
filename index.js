@@ -12,7 +12,7 @@ server.get('/tweets', function(req, res){
     const listTweets = tweets.map(tweet =>{
         for(let i=0; i<users.length; i++){
             if(users[i].username === tweet.username){
-                return {...tweet, avatar: users[i].avatar}
+                return {...tweet, avatar: users[i].avatar};
             }
         }
     })
@@ -23,16 +23,21 @@ server.get('/tweets', function(req, res){
     }
 );
 
-/*server.get('/tweets/:username', function(req, res){
-    const {username} = req.params;
-    console.log(username);
-    console.log(tweets)
-    const posts = users.find((post) => tweets.username === username);
+server.get('/tweets/:username', function(req, res){
+    const user = req.params.username;
+    const newList = []
+    tweets.forEach(tweet =>{
+        for(let i=0; i<users.length; i++){
+            if(tweet.username === user && users[i].username === user){
+                newList.push({...tweet, avatar: users[i].avatar})
+            }
+        }
+    })
 
-    res.send(posts);
-
-});*/
-
+    const lastTweets = newList.slice(-10).reverse();
+        res.send(lastTweets);
+        return;
+});
 
 server.post('/tweets', function(req, res){
     const {username, tweet} = req.body;
@@ -47,7 +52,7 @@ server.post('/tweets', function(req, res){
         res.status(400).send({error: "Todos os campos são obrigatórios!"});
         return;
     }
-})
+});
 
 server.post('/sign-up', function(req, res){
     const {username, avatar} = req.body;
@@ -62,6 +67,7 @@ server.post('/sign-up', function(req, res){
         res.status(400).send({error: "Todos os campos são obrigatórios!"});
         return;
     }
-})
+});
+
 
 server.listen(3000, () => console.log('Listening on 5000'));
