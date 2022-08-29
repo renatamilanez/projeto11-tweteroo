@@ -9,8 +9,30 @@ const users = [];
 const tweets = [];
 
 server.get('/tweets', function(req, res){
-    res.send(tweets);
-});
+    const listTweets = tweets.map(tweet =>{
+        for(let i=0; i<users.length; i++){
+            if(users[i].username === tweet.username){
+                return {...tweet, avatar: users[i].avatar}
+            }
+        }
+    })
+
+    const lastTweets = listTweets.slice(-10).reverse();
+        res.send(lastTweets);
+        return;
+    }
+);
+
+/*server.get('/tweets/:username', function(req, res){
+    const {username} = req.params;
+    console.log(username);
+    console.log(tweets)
+    const posts = users.find((post) => tweets.username === username);
+
+    res.send(posts);
+
+});*/
+
 
 server.post('/tweets', function(req, res){
     const {username, tweet} = req.body;
